@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Modern Design System - Premium Minimalist Grayscale Theme (Mobile Optimized) */
+
+@layer base {
+  :root {
+    /* Core Brand Colors */
+    --background: 0 0% 98%; 
+    --foreground: 0 0% 10%; 
+    --muted-foreground: 0 0% 40%; 
+
+    --card: 0 0% 100%; 
+    --card-foreground: 0 0% 10%;
+
+    --primary: 0 0% 12%; 
+    --primary-foreground: 0 0% 100%; 
+
+    --secondary: 0 0% 94%; 
+    --secondary-foreground: 0 0% 10%;
+
+    --border: 0 0% 90%; 
+    --input: 0 0% 90%;
+    --ring: 0 0% 12%; 
+
+    --radius: 1rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(0 0% 15%) 0%, hsl(0 0% 35%) 100%);
+    --gradient-bg: linear-gradient(135deg, hsl(0 0% 99%) 0%, hsl(0 0% 95%) 100%);
+    
+    /* Shadows */
+    --shadow-glow: 0 0 40px hsl(0 0% 0% / 0.08);
+    --shadow-elevated: 0 20px 40px -10px hsl(0 0% 0% / 0.12);
+
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer base {
+  /* CRITICAL: The "Force Field" for Mobile Width */
+  html, body {
+    @apply antialiased bg-background text-foreground font-inter;
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    touch-action: manipulation; /* Improves mobile tap responsiveness */
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box; /* Ensures padding does not push width past 100% */
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-space-grotesk tracking-tight text-foreground break-words;
+  }
+}
+
+@layer components {
+  /* ==========================================
+     MOBILE-FIRST BACKGROUND SYSTEM 
+     ========================================== */
+  
+  .animated-bg {
+    @apply fixed inset-0 z-[-1] overflow-hidden bg-background pointer-events-none;
+  }
+
+  .animated-bg::before {
+    content: '';
+    @apply absolute inset-[-100%];
+    background-image: radial-gradient(hsl(0 0% 0% / 0.06) 1.5px, transparent 1.5px);
+    background-size: 24px 24px; /* Denser dots for mobile */
+    animation: pan-dots 90s linear infinite;
+  }
+
+  /* Blobs: Hidden on mobile to prevent layout leakage, visible on MD+ */
+  .bg-blob-1 {
+    @apply hidden md:block absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full filter blur-[100px] opacity-40 mix-blend-multiply pointer-events-none;
+    background: radial-gradient(circle, hsl(0 0% 85%), transparent 70%);
+    animation: float-blob 25s ease-in-out infinite alternate;
+  }
+
+  .bg-blob-2 {
+    @apply hidden md:block absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full filter blur-[120px] opacity-30 mix-blend-multiply pointer-events-none;
+    background: radial-gradient(circle, hsl(0 0% 80%), transparent 70%);
+    animation: float-blob-reverse 30s ease-in-out infinite alternate;
+  }
+
+  /* ==========================================
+     MOBILE-OPTIMIZED GLASS 
+     ========================================== */
+  .glass-card {
+    @apply relative overflow-hidden backdrop-blur-xl z-10;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.04), 
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+  }
+
+  /* Shine effect disabled on mobile to prevent visual artifacts */
+  @media (hover: hover) {
+    .glass-card::after {
+      content: '';
+      @apply absolute top-0 -left-[100%] w-1/2 h-full z-[-1];
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card:hover::after {
+      left: 150%; 
+    }
+  }
+
+  /* ==========================================
+     SCROLLABLE TABLE UTILITY (for Comparison.jsx)
+     ========================================== */
+  .mobile-scroll-container {
+    @apply w-full overflow-x-auto pb-4;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox hide */
+  }
+  .mobile-scroll-container::-webkit-scrollbar {
+    display: none; /* Chrome/Safari hide */
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-gray-950 to-gray-500 bg-clip-text text-transparent;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  /* Disable Hover Lift on Touch Devices to avoid "sticky" hover states */
+  @media (hover: hover) {
+    .hover-lift {
+      @apply transition-transform duration-300 ease-out;
+    }
+    .hover-lift:hover {
+      @apply -translate-y-1.5;
+      box-shadow: var(--shadow-elevated);
+    }
+  }
+
+  .service-card {
+    @apply glass-card p-6 md:p-8 rounded-2xl cursor-pointer;
+  }
+
+  /* Custom Minimalist Scrollbar (Only for Desktop) */
+  @media (min-width: 1024px) {
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { @apply bg-transparent; }
+    ::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full; }
+    ::-webkit-scrollbar-thumb:hover { @apply bg-gray-400; }
+  }
+}
+
+/* ==========================================
+   Keyframe Animations
+   ========================================== */
+@keyframes pan-dots {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(24px); }
+}
+
+@keyframes float-blob {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(5%, 10%) scale(1.1); }
+  100% { transform: translate(-5%, -5%) scale(0.9); }
+}
+
+@keyframes float-blob-reverse {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-10%, -5%) scale(1.05); }
+  100% { transform: translate(5%, 10%) scale(0.95); }
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
