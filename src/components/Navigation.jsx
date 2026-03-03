@@ -30,13 +30,13 @@ const Navigation = () => {
 
   return (
     <>
-      {/* 1. h-16 on mobile, h-24 on desktop to remove that extra gap.
-          2. px-4 on mobile for more room.
+      {/* FIX 1: Replaced `left-0 right-0` with `left-0 w-full max-w-[100vw] box-border`. 
+        This guarantees the header will never exceed the physical width of the mobile screen.
       */}
-      <header className="fixed top-0 left-0 right-0 h-16 lg:h-24 z-50 flex items-center justify-between px-4 lg:px-10 pointer-events-none">
+      <header className="fixed top-0 left-0 w-full max-w-[100vw] h-16 lg:h-24 z-50 flex items-center justify-between px-4 lg:px-10 pointer-events-none box-border">
         
-        {/* LEFT: Logo - Scaled down for mobile to prevent overflow */}
-        <Link to="/" className="pointer-events-auto flex items-center shrink">
+        {/* FIX 2: Added `shrink-0` so the logo is never squished or forced out of bounds */}
+        <Link to="/" className="pointer-events-auto flex items-center shrink-0">
           <img 
             src={logo} 
             alt="OneMerge Logo" 
@@ -64,10 +64,9 @@ const Navigation = () => {
           })}
         </nav>
 
-        {/* RIGHT: CTA Button & Mobile Menu */}
-        <div className="pointer-events-auto flex items-center gap-2 lg:gap-4">
+        {/* FIX 3: Added `shrink-0` to the container to ensure the mobile menu icon stays anchored to the right edge */}
+        <div className="pointer-events-auto flex items-center justify-end gap-2 lg:gap-4 shrink-0">
           
-          {/* Only show "Book a Call" on desktop to keep mobile clean */}
           <Link 
             to="/contact" 
             className="hidden lg:flex items-center gap-3 bg-black text-white pl-6 pr-1.5 py-1.5 rounded-full text-[14px] font-semibold tracking-tight transition-all duration-400 ease-out hover:shadow-[0_8px_20px_-6px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 group"
@@ -78,7 +77,7 @@ const Navigation = () => {
             </div>
           </Link>
 
-          {/* Mobile Menu Toggle: Made slightly smaller for mobile */}
+          {/* Mobile Menu Toggle */}
           <Button
             variant="ghost"
             size="icon"
@@ -94,13 +93,14 @@ const Navigation = () => {
         </div>
       </header>
 
-      {/* Full-Screen Mobile Menu Overlay */}
+      {/* FIX 4: Swapped `inset-0` for `top-0 left-0 w-full h-[100dvh]`.
+        `100dvh` respects mobile browser UI (like Safari's URL bar) and prevents weird scrolling bugs inside the menu.
+      */}
       <div
-        className={`fixed inset-0 z-[60] bg-white/95 backdrop-blur-3xl transition-all duration-500 ease-in-out lg:hidden flex flex-col ${
+        className={`fixed top-0 left-0 w-full h-[100dvh] z-[60] bg-white/95 backdrop-blur-3xl transition-all duration-500 ease-in-out lg:hidden flex flex-col ${
           isOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
         }`}
       >
-        {/* Close Button Inside Menu for better UX */}
         <div className="flex justify-end p-6">
             <Button variant="ghost" onClick={() => setIsOpen(false)}>
                 <X className="h-8 w-8 text-black" />
